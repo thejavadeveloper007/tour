@@ -124,6 +124,11 @@ const tourSchema = new mongoose.Schema({
   toObject:{ virtuals: true}
 });
 
+tourSchema.index({ price: 1, ratingAvg: 1});
+tourSchema.index({ slug: 1});
+tourSchema.index({ startLocation: '2dsphere'});
+tourSchema.index({ geoNear: '2dsphere'})
+
 tourSchema.virtual('durationInDays').get(function(){
   return this.durationInHours/24; // here this represent the current document
 });
@@ -168,12 +173,12 @@ tourSchema.post(/^find/, function(doc, next){
 //   next();
 // });
 //AGGREGATION MIDDLEWARE: used to get access to aggregation pipeline object or function
-tourSchema.pre('aggregate', function(next){
-  this.pipeline().unshift({$match: { secretTour: { $ne: true}}}); // unshift is js function which used for add an element in the begining of the array
-  console.log('pipeline',this.pipeline());
+// tourSchema.pre('aggregate', function(next){
+//   this.pipeline().unshift({$match: { secretTour: { $ne: true}}}); // unshift is js function which used for add an element in the begining of the array
+//   console.log('pipeline',this.pipeline());
 
-  next();
-})
+//   next();
+// })
 const Tour = mongoose.model('Tour',tourSchema); // schema to model so that we can perform operations directly with the Tour name 
 
 module.exports = Tour;

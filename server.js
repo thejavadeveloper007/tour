@@ -21,13 +21,13 @@ mongoose.connect(dbUrl,{
     useUnifiedTopology: true
 }).then(con =>{
     console.log('DB connection successful');
-    Review.createIndexes((err) => {
-        if (err) {
-        console.error('Error creating indexes:', err);
-        } else {
-        console.log('Indexes created successfully');
-        }
-        });
+    // Review.createIndexes((err) => {
+    //     if (err) {
+    //     console.error('Error creating indexes:', err);
+    //     } else {
+    //     console.log('Indexes created successfully');
+    //     }
+    //     });
 }).catch((err)=> console.log(err));
 
 const server = app.listen(port, ()=>{
