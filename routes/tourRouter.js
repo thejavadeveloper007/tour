@@ -34,7 +34,7 @@ tourRouter.get("/monthly-plan/:year", getMonthlyPlan);
 tourRouter.get("/tour-stats", getTourStats);
 tourRouter.get("/top-5-tours", topTour, getAllTour);
 tourRouter
-  .get("/", protect, getAllTour)
+  .get("/",protect, getAllTour)
   .get("/:id", getTourById)
   .post("/", restrictTo("admin", "lead-guide", "guide"), createTour)
   .patch("/:id", updateTourById)
