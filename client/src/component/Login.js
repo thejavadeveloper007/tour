@@ -54,7 +54,7 @@ const Login = () => {
   }
 
   return (
-    <div className='flex flex-col items-center gap-3 py-4 h-81.6'>
+    <div className='flex flex-col items-center mx-auto gap-3 py-4 h-81.6 w-64'>
       <div className='flex flex-col items-center gap-2'>
         <h1 className='font-bold text-2xl'>Login Page</h1>
         <form className='flex flex-col items-start gap-2' onSubmit={handleLogin}>
@@ -66,7 +66,7 @@ const Login = () => {
             <label className='mr-3' htmlFor="password">Password:</label>
             <input className='w-full form-input rounded-full h-8  ' type="password" name="password" value={formData.password} onChange={handleInputChange} placeholder='Enter password here...'/>
           </div>
-          <div className='flex content-center'>
+          <div className='flex content-center mx-auto'>
           <button className='bg-teal-600 hover:bg-teal-700 rounded-md px-5 py-1 text-white' type='submit'>Login</button>
           </div>
         </form>
@@ -74,7 +74,7 @@ const Login = () => {
       <div className='flex flex-col items-center gap-3'>
         <p className='font-bold'>or</p>
        <button>
-        <div>
+        <div className='mx-auto'>
        <GoogleOauth />
        </div>
        </button>
