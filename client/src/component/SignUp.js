@@ -40,83 +40,72 @@ const SignUp = () => {
   };
 
   return (
-    <div className="h-81.6">
-      <div className="flex flex-col items-center gap-1">
-        <h2 className="font-bold">SignUp Page</h2>
-        <form
-          className="flex flex-col items-center my-2 gap-2"
-          onSubmit={handleSignUp}
-        >
-          <div>
-            <label className="mx-1" htmlFor="username">
-              Username:
-            </label>
-            <input
-              className="border border-gray-500 rounded-full p-1 px-4"
-              type="text"
-              name="name"
-              value={formData.name}
-              onChange={ handleInputChange}
-              required
-            />
-          </div>
-          <div>
-            <label className="mx-1" htmlFor="username">
-              Email:
-            </label>
-            <input
-              className="border border-gray-500 rounded-full p-1 px-4"
-              type="email"
-              name="email"
-              value={formData.email}
-              onChange={ handleInputChange}
-              required
-            />
-          </div>
-          <div>
-            <label className="mr-3" htmlFor="password">
-              Password:
-            </label>
-            <input
-              className="border border-gray-500 rounded-full p-1 px-4"
-              type="password"
-              name="password"
-              value={formData.password}
-              onChange={ handleInputChange}
-              required
-            />
-          </div>
-          <div>
-            <label className="mr-3" htmlFor="password">
-              Confirm-Password:
-            </label>
-            <input
-              className="border border-gray-500 rounded-full p-1 px-4"
-              type="password"
-              name="confirmPassword"
-              value={formData.confirmPassword}
-              onChange={ handleInputChange}
-              required
-            />
-          </div>
-          <button
-            className="bg-teal-700 rounded-md px-5 py-1 text-white"
-            type="submit"
-          >
-            SignUp
-          </button>
-        </form>
+    <div className="flex flex-col h-81.6 mx-auto w-64 py-3 items-center gap-1">
+    <h1 className="font-bold">SignUp Page</h1>
+    <form
+      className="flex flex-col items-center my-2 gap-2"
+      onSubmit={handleSignUp}
+    >
+      <div>
+        <label className="mx-1" htmlFor="username">
+          Username:
+        </label>
+        <input
+          className="border border-gray-500 rounded-full w-full p-1 px-4"
+          type="text"
+          name="name"
+          value={formData.name}
+          onChange={ handleInputChange}
+          required
+        />
       </div>
-      <div className="flex flex-col items-center">
-        <p>or</p>
-        <button
-          className="font-bold border border-gray-500 rounded-full px-2 my-2 hover:bg-gray-200"
-          onClick={googleAuth}
-        >
-          SignUp with Google
-        </button>
+      <div>
+        <label className="mx-1" htmlFor="username">
+          Email:
+        </label>
+        <input
+          className="border border-gray-500 rounded-full w-full p-1 px-4"
+          type="email"
+          name="email"
+          value={formData.email}
+          onChange={ handleInputChange}
+          required
+        />
       </div>
-    </div>
+      <div>
+        <label className="mr-3" htmlFor="password">
+          Password:
+        </label>
+        <input
+          className="border border-gray-500 rounded-full w-full p-1 px-4"
+          type="password"
+          name="password"
+          value={formData.password}
+          onChange={ handleInputChange}
+          required
+        />
+      </div>
+      <div>
+        <label className="mr-3" htmlFor="password">
+          Confirm-Password:
+        </label>
+        <input
+          className="border border-gray-500 rounded-full w-full p-1 px-4"
+          type="password"
+          name="confirmPassword"
+          value={formData.confirmPassword}
+          onChange={ handleInputChange}
+          required
+        />
+      </div>
+      <button
+        className="bg-teal-700 rounded-md mx-auto px-5 py-1 text-white"
+        type="submit"
+      >
+        SignUp
+      </button>
+    </form>
+  </div>
   );
 };
 
