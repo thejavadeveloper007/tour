@@ -1,6 +1,6 @@
 // import express from 'express';
 const express = require('express');
-
+const path = require('path');
 // import dotenv from 'dotenv';
 // import morgan from 'morgan';
 const morgan = require('morgan');
@@ -9,8 +9,13 @@ const helmet = require('helmet');
 const mongoSanitize = require('express-mongo-sanitize');
 const xss = require('xss-clean');
 const hpp = require('hpp');
+const cors = require('cors');
+const passport = require('passport');
+const cookieSession = require('cookie-session');
 const AppError = require('./utils/appError');
 const globalErrorHandler = require('./controller/errorController');
+const passportSetup = require('./utils/passport');
+const authRouter = require('./routes/authRouter');
 
 // import tourRouter from './routes/tourRouter.js';
 const tourRouter = require('./routes/tourRouter');
@@ -19,8 +24,30 @@ const resRouter = require('./routes/resRouter');
 const reviewRouter = require('./routes/reviewRouter');
 
 const app = express();
+app.set('view engine', 'pug');
+app.set('views', path.join(__dirname,'views'));
 // const config = dotenv.config();
 //GLOBAL MIDDLEWARE
+app.use(
+    cookieSession({
+        name:"session",
+        keys:["rockey"],
+        maxAge: 24*60*60*100
+    }) 
+)
+
+app.use(passport.initialize());
+app.use(passport.session());
+// Define CORS options
+const corsOptions = {
+    origin: 'http://localhost:3000', // specify your allowed origin(s)
+    methods: 'GET,POST',           // specify allowed HTTP methods
+    allowedHeaders: 'Content-Type,Authorization', // specify allowed headers
+    credentials: true
+  };
+  // Enable CORS with custom options
+app.use(cors(corsOptions));
+app.use(express.static(path.join(__dirname,'public'))); //serving static files
 app.use(helmet()); // Set security http headers
 if(process.env.NODE_ENV == 'development'){
     app.use(morgan('dev')); // logging in development mode
@@ -44,13 +71,20 @@ app.use(hpp({
         'difficulty'
     ]
 })); //Prevent http parameter polution like sending duplicate key in headers or in query, also we can define a list to accept duplicasy
-app.use(express.static(`${__dirname}/public`)); //serving static files
 //get req time 
 app.use((req,res,next) =>{
     req.requestTime = new Date().toISOString();
     next();
 });
 
+
+app.get('/',(req, res) =>{
+    res.status(200).render('base',{
+        tour: 'Mehrangarh',
+        user: 'Rakesh'
+    })
+});
+app.use('/auth', authRouter);
 app.use('/api/v1/tour', tourRouter);
 app.use('/api/v1/user', userRouter);
 app.use('/api/v1/restraunt', resRouter);
