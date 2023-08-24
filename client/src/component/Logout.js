@@ -1,4 +1,5 @@
 import React from 'react'
+// import { toast } from 'react-toastify';
 // import { useDispatch } from 'react-redux';
 // import { addLoginStatus } from '../utils/tourSlice';
 
@@ -7,6 +8,15 @@ const Logout = () => {
     const logout = () =>{
         localStorage.removeItem('id');
         document.cookie =  '';
+        // toast.success('Logout successful!', {
+        //   position: 'top-center',
+        //   autoClose: 3000,
+        //   hideProgressBar: true,
+        //   closeOnClick: true,
+        //   pauseOnHover: false,
+        //   draggable: true,
+        //   progress: undefined,
+        // });
         window.location.href = ('/login');
         // dispatch(addLoginStatus(false));
     }

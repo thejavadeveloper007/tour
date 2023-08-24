@@ -24,9 +24,9 @@ const Header = () =>{
     }
 
     return(
-            <div className="flex justify-between p-3 bg-emerald-500 shadow-md items-center">
+            <div className="flex justify-between p-2 bg-emerald-500 shadow-md items-center">
                 <div>
-                    <img className="h-12 bg-transparent box-content" src={LOGO_URL} alt="logo" />
+                    <img className="w-14 bg-transparent box-content rounded-full" src={LOGO_URL} alt="logo" />
                 </div>
                 <div>
                     <ul className="list-none flex gap-3 pr-3">

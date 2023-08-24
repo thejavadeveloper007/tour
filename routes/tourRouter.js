@@ -2,6 +2,7 @@
 const express = require("express");
 // import createTour  from '../controller/tourController';
 const { protect, restrictTo } = require("../controller/authController");
+const { getDataFromRedis } = require('../controller/redisData');
 const {
   createTour,
   getAllTour,
@@ -34,7 +35,7 @@ tourRouter.get("/monthly-plan/:year", getMonthlyPlan);
 tourRouter.get("/tour-stats", getTourStats);
 tourRouter.get("/top-5-tours", topTour, getAllTour);
 tourRouter
-  .get("/",protect, getAllTour)
+  .get("/", getDataFromRedis("tour-data"), getAllTour)
   .get("/:id", getTourById)
   .post("/", restrictTo("admin", "lead-guide", "guide"), createTour)
   .patch("/:id", updateTourById)

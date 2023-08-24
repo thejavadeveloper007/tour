@@ -84,7 +84,7 @@ app.get('/',(req, res) =>{
         user: 'Rakesh'
     })
 });
-app.use('/auth', authRouter);
+// app.use('/auth', authRouter);
 app.use('/api/v1/tour', tourRouter);
 app.use('/api/v1/user', userRouter);
 app.use('/api/v1/restraunt', resRouter);
