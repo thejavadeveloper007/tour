@@ -4,6 +4,7 @@ import jwt_decode from 'jwt-decode';
 import ReactGA from 'react-ga';
 import axios from 'axios';
 import { useEffect } from 'react';
+import { toast } from 'react-toastify';
 // import { useDispatch } from 'react-redux';
 // import { addToken } from '../utils/tourSlice';
 
@@ -37,7 +38,17 @@ const GoogleOauth = () => {
                   value: 'data'
                 })
             //    await dispatch(addToken(response.data.token)); //temporary adding token to redux store
+            // toast.success('Login successful!', {
+            //   position: 'top-center',
+            //   autoClose: 3000,
+            //   hideProgressBar: true,
+            //   closeOnClick: true,
+            //   pauseOnHover: false,
+            //   draggable: true,
+            //   progress: undefined,
+            // });
                 window.location.href = ('/');
+
   
                 // if(response.data.message.comment === "Old User") {
                 //   window.location.href = ('/sectionpage');
@@ -45,6 +56,16 @@ const GoogleOauth = () => {
                 // else {
                 //   window.location.href = ('/uploadpage');
                 // }
+              }).catch((err) =>{
+                toast.error('Login failed. Please try again.', {
+                  position: 'top-center',
+                  autoClose: 3000,
+                  hideProgressBar: true,
+                  closeOnClick: true,
+                  pauseOnHover: false,
+                  draggable: true,
+                  progress: undefined,
+                });
               })
           }
         };

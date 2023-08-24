@@ -6,6 +6,9 @@ const APIFeature = require("../utils/apiFeatures");
 const { pipeline } = require("nodemailer/lib/xoauth2");
 const catchAsync = require("../utils/catchAsync");
 const AppError = require("../utils/appError");
+const redis = require('./redisSetup');
+const util = require('util');
+// const { redisClient } = require('../server');
 const {
   deleteOne,
   updateOne,
@@ -104,6 +107,10 @@ const topTour = (req, res, next) => {
 };
 
 const getAllTour = catchAsync(async (req, res, next) => {
+  // const redisClient = redis.createClient();
+  // console.log('redis client',redisClient);
+  // await redisClient.connect();
+  // redisClient.set = util.promisify(redisClient.set);
   // //build query
   // const queryObj = {...req.query};
   // console.log('30',queryObj);
@@ -139,24 +146,29 @@ const getAllTour = catchAsync(async (req, res, next) => {
   //execute query
   // const tours = await query;
   // const tours = await Tour.find();
-  const features = new APIFeature(
-    Tour.find().populate({
-      path: "guide",
-      select: "-__v -passwordChangedAt -password -isActive",
-    }),
-    req.query,
-  )
-    .filter()
-    .sort()
-    .fieldLimit()
-    .paginate();
-  const tours = await features.query;
-  if (!tours) {
-    return next(
-      new AppError("There is no such tour with the provided filters.", 404),
-    );
-  }
-  // console.log('tours',tours);
+  const cachedData = await redis.get('tour-data');
+  const toursfromRedis = JSON.parse(cachedData);
+    const features = new APIFeature(
+      Tour.find().populate({
+        path: "guide",
+        select: "-__v -passwordChangedAt -password -isActive",
+      }),
+      req.query,
+      )
+      .filter()
+      .sort()
+      .fieldLimit()
+      .paginate();
+     const tours = await features.query;
+      if (!tours) {
+        return next(
+          new AppError("There is no such tour with the provided filters.", 404),
+          );
+        }
+        const redisRes = await redis.set("tour-data", JSON.stringify(tours));
+        console.log('redisRes',redisRes);
+        // await redisClient.disconnect();
+
   res.status(200).json({
     status: "success",
     message: "Tours data fetched successfully",

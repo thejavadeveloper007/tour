@@ -12,10 +12,12 @@ import About from "./component/About";
 import Services from "./component/Services";
 import Help from "./component/Help";
 import SignUp from "./component/SignUp";
+import { ToastContainer } from "react-toastify";
 
 import UserContext from "./utils/useContext";
 import { Provider } from "react-redux";
 import store from "./utils/store";
+import 'react-toastify/dist/ReactToastify.css';
 
 const AppLayout = () =>{
   const [user, setUser] = useState({
@@ -36,8 +38,9 @@ const AppLayout = () =>{
     <UserContext.Provider value={{
         user: user
       }}>
-      <Header />
+     <Header />
       <Outlet />
+     <ToastContainer />
       <Footer />
     </UserContext.Provider>
     </Provider>
