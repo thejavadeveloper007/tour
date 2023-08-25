@@ -129,28 +129,26 @@ const updatePassword = catchAsync(async(req, res, next) =>{
 });
 
 const getToken = id => {
-    // console.log('id 132', id);
     const token = jwt.sign({id: id}, process.env.JWT_SECRET, {expiresIn: process.env.JWT_EXPIRES_IN});
-    // console.log('token 134',token);
     return token;
 }
-
-const storeTokenToCookies = (user, satusCode, res) =>{
-    const token = getToken(user._id);
-    const cookieOptions = {
-        expires: new Date(Date.now() + process.env.JWT_COOKIE_EXPIRES_IN*24*60*60*1000),
-        httpOnly: true
-    }
-    if(process.env.NODE_ENV == 'production') cookieOptions.secure = true;
-    res.cookie('jwt', token, cookieOptions);
-    //to remove password from response only
-    user.params = undefined;
-    res.status(statusCode).json({
-        status: "success",
-        token,
-        data: user
-    })
-}
+// for now we are storing it from client side/front end
+// const storeTokenToCookies = (user, satusCode, res) =>{
+//     const token = getToken(user._id);
+//     const cookieOptions = {
+//         expires: new Date(Date.now() + process.env.JWT_COOKIE_EXPIRES_IN*24*60*60*1000),
+//         httpOnly: true
+//     }
+//     if(process.env.NODE_ENV == 'production') cookieOptions.secure = true;
+//     res.cookie('jwt', token, cookieOptions);
+//     //to remove password from response only
+//     user.params = undefined;
+//     res.status(statusCode).json({
+//         status: "success",
+//         token,
+//         data: user
+//     })
+// }
 const signUp = catchAsync(async(req,res) => {
     const { name, email, password, confirmPassword, passwordChangedAt, role } = req.body;
 
@@ -168,19 +166,16 @@ const signUp = catchAsync(async(req,res) => {
 
 const loginUser = catchAsync(async(req, res, next) =>{
     const { email, password } = req.body;
-    // console.log('168',email, password);
     //check fields are not empty
     if(!email || !password){
         return next(new AppError('Email or Password are missing!', 400));
     }
     //check if user exist
     const user = await User.findOne({email: email});
-    // console.log('175',user);
     if(!user || !await user.correctPassword(password, user.password)){
         return next(new AppError('Incorrect email or password!', 401));
     }
     const token = await getToken(user._id);
-    // console.log('180',token);
     res.status(200).json({
         status: "success",
         token: token,
@@ -190,15 +185,11 @@ const loginUser = catchAsync(async(req, res, next) =>{
 });
 
 const googleLogin = catchAsync(async(req, res) =>{
-    // console.log('req 190',req);
-    // console.log('req body', req.body);
     const { email } = req.body.data;
     const user = await User.findOne({email: email});
-    // console.log('user 193',user);
     let token
     if(user){
      token = await getToken(user?._id);
-    //  console.log('token 200',token);
     }
     res.status(200).json({
         status: "success",

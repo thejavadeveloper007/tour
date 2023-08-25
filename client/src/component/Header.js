@@ -1,28 +1,31 @@
 import { Link } from "react-router-dom";
 import { LOGO_URL } from "../utils/constants"
-import { useEffect, useState } from "react";
-// import { useSelector } from "react-redux";
+import { useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { addLoginStatus } from "../utils/tourSlice";
 
 const Header = () =>{
-    // const loginStatus = useSelector(store => store.tour.loginStatus);
-    // console.log('login status 9',loginStatus);
-    const [isLoggedIn, setIsLoggedIn] = useState(false);
-   
-    useEffect(()=>{ 
-        if(document.cookie.includes('_secure_RK_')){
-            setIsLoggedIn(true)
+    const loginStatus = useSelector(store => store.tour.loginStatus);
+    let dispatch = useDispatch();
+  
+    useEffect(()=>{
+      const token = getTokenFromCookie()  
+        if(token){
+            dispatch(addLoginStatus(true))
         }else{
-            setIsLoggedIn(false)
+            dispatch(addLoginStatus(false))
         }
-    },[])
-
-    const handleLogoutStatus = () =>{
-        setIsLoggedIn(false)
-    }
-    const handleLoginStatus = () =>{
-        setIsLoggedIn(true)
-    }
-
+    },[]);
+    function getTokenFromCookie() {
+        const cookies = document.cookie.split(';');
+        for (const cookie of cookies) {
+          const [name, value] = cookie.trim().split('=');
+          if (name === '_secure_RK') {
+            return value;
+          }
+        }
+        return null; // Token not found
+      }
     return(
             <div className="flex justify-between p-2 bg-emerald-500 shadow-md items-center">
                 <div>
@@ -36,10 +39,10 @@ const Header = () =>{
                         <li className="hover:text-red-200"><Link to="/help">Help</Link></li>
                         <li className="hover:text-red-200">
                             {
-                                isLoggedIn ? 
-                                <Link to="/logout" onClick={()=>handleLogoutStatus()}>Logout</Link>
+                                loginStatus ? 
+                                <Link to="/logout">Logout</Link>
                                 :
-                                <Link to="/login" onClick={()=>handleLoginStatus()}>Login</Link>
+                                <Link to="/login">Login</Link>
                             }
                         </li>
                         <li className="hover:text-red-200"><Link to="/signUp">SignUp</Link></li>
@@ -49,4 +52,4 @@ const Header = () =>{
     )
 }
 
-export default Header
+export default Header;
