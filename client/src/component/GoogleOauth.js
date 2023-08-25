@@ -5,31 +5,34 @@ import ReactGA from 'react-ga';
 import axios from 'axios';
 import { useEffect } from 'react';
 import { toast } from 'react-toastify';
-// import { useDispatch } from 'react-redux';
+import { useDispatch } from 'react-redux';
+import { addLoginStatus } from '../utils/tourSlice';
 // import { addToken } from '../utils/tourSlice';
 
 const baseURL = process.env.REACT_APP_SERVER_URL;
 const GoogleOauth = () => {
-    // let dispatch = useDispatch();
+    let dispatch = useDispatch();
     useEffect(()=> {
         ReactGA.pageview(window.location.pathname);
     })
 
-      const responseMessage = async(response) => {
-        console.log('response 15',response);
-          const data = await jwt_decode(response.credential);
-          console.log('data 17',data);
-          if(data.email_verified) {
-              localStorage.setItem('name', data.given_name + " " + data.family_name);
-              localStorage.setItem('email', data.email);
-  
-              axios.post(`${baseURL}/api/v1/user/google-login`, { data: data }).then(async(response) => {
-                console.log('response 23',response);
+    // if(document.cookie.includes('_secure_RK_')){
+    //   dispatch(addLoginStatus(true))
+    // }
+
+    const responseMessage = async(response) => {
+      const data = await jwt_decode(response.credential);
+      if(data.email_verified) {
+        localStorage.setItem('name', data.given_name + " " + data.family_name);
+        localStorage.setItem('email', data.email);
+        
+        axios.post(`${baseURL}/api/v1/user/google-login`, { data: data }).then(async(response) => {
+          dispatch(addLoginStatus(true));
                 localStorage.setItem('id', response.data.id);
                 const d = new Date();
                 d.setTime(d.getTime() + (30*24*60*60*1000));
                 let expires = "expires="+ d.toUTCString();
-                document.cookie = "_secure_RK_" + "=" + response.data.token + ";" + expires + ";path=/";
+                document.cookie = `_secure_RK=${response.data.token};expires=${expires};path=/`;
   
                 ReactGA.event({
                   category: "/google-login",
@@ -38,24 +41,18 @@ const GoogleOauth = () => {
                   value: 'data'
                 })
             //    await dispatch(addToken(response.data.token)); //temporary adding token to redux store
-            // toast.success('Login successful!', {
-            //   position: 'top-center',
-            //   autoClose: 3000,
-            //   hideProgressBar: true,
-            //   closeOnClick: true,
-            //   pauseOnHover: false,
-            //   draggable: true,
-            //   progress: undefined,
-            // });
-                window.location.href = ('/');
-
-  
-                // if(response.data.message.comment === "Old User") {
-                //   window.location.href = ('/sectionpage');
-                // }
-                // else {
-                //   window.location.href = ('/uploadpage');
-                // }
+            setTimeout(()=>{
+              window.location.href = ('/');
+            },1500)
+            toast.success('Login successful!', {
+              position: 'top-center',
+              autoClose: 1500,
+              hideProgressBar: true,
+              closeOnClick: true,
+              pauseOnHover: false,
+              draggable: true,
+              progress: undefined,
+            });
               }).catch((err) =>{
                 toast.error('Login failed. Please try again.', {
                   position: 'top-center',
@@ -83,4 +80,4 @@ const GoogleOauth = () => {
   )
 }
 
-export default GoogleOauth
+export default GoogleOauth;

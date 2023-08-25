@@ -1,42 +1,42 @@
 import React, { useState } from 'react'
 import axios from 'axios';
-// import { addLoginStatus } from '../utils/tourSlice';
-// import { useDispatch } from 'react-redux';
+import { addLoginStatus } from '../utils/tourSlice';
+import { useDispatch } from 'react-redux';
 import GoogleOauth from './GoogleOauth';
 import { toast } from 'react-toastify';
 
 const Login = () => {
-  // let dispatch = useDispatch();
+  let dispatch = useDispatch();
   const [formData, setFormData] = useState({
     email:'',
     password:''
   });
-  // const [password, setPassword] = useState("dummyPass");
-  // const [password, setPassword] = useState(null);
-  // const googleAuth =() =>{
-  //   // console.log('g auth', process.env.SERVER_URL);
-  //   window.open(
-  //     `http://localhost:7007/auth/google/callback`,
-  //     "_self"
-  //   );
-  // };
 
   const handleLogin = async(event) => {
     event.preventDefault();
-    // Perform login logic here
-    console.log('Logged in with username:', formData);
+   
     axios.post(`${process.env.REACT_APP_SERVER_URL}/api/v1/user/login`,JSON.stringify(formData),{  headers:{
       'Content-Type': 'application/json'
     }}
     ).then((response) =>{
-
-      console.log('29',response); 
+      dispatch(addLoginStatus(true));
       localStorage.setItem('id', response.data.id);
                   const d = new Date();
                   d.setTime(d.getTime() + (30*24*60*60*1000));
                   let expires = "expires="+ d.toUTCString();
-                  document.cookie = "_secure_RK_" + "=" + response.data.token + ";" + expires + ";path=/";
-                  window.location.href = ('/');
+                  document.cookie = `_secure_RK=${response.data.token};expires=${expires};path=/`;
+                  setTimeout(()=>{
+                    window.location.href = ('/');
+                  },3000);
+                  toast.success('Login successful!', {
+                    position: 'top-center',
+                    autoClose: 3000,
+                    hideProgressBar: true,
+                    closeOnClick: true,
+                    pauseOnHover: false,
+                    draggable: true,
+                    progress: undefined,
+                  });
     }).catch((err) =>{   
       toast.error('Login failed. Please try again.', {
         position: 'top-center',
@@ -51,14 +51,6 @@ const Login = () => {
       
    
   };
-
-  // const handleUsername = (event) =>{
-  //   setEmail(event.target.value);
-  // }
-
-  // const handlePassword = (event) =>{
-  //   setPassword(event.target.value);
-  // }
 
   const handleInputChange =(event) =>{
     const { name, value } = event.target;

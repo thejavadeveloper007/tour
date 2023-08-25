@@ -8,11 +8,9 @@ const tourSlice = createSlice({
     },
     reducers:{
         addToken: (state, action) =>{
-            // console.log('action', action.payload);
             state.token = action.payload;
         },
         addLoginStatus: (state, action) =>{
-            console.log('action', action.payload);
             state.loginStatus = action.payload;
         }
         

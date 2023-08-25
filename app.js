@@ -1,8 +1,5 @@
-// import express from 'express';
 const express = require('express');
 const path = require('path');
-// import dotenv from 'dotenv';
-// import morgan from 'morgan';
 const morgan = require('morgan');
 const rateLimit = require('express-rate-limit');
 const helmet = require('helmet');
@@ -15,9 +12,7 @@ const cookieSession = require('cookie-session');
 const AppError = require('./utils/appError');
 const globalErrorHandler = require('./controller/errorController');
 const passportSetup = require('./utils/passport');
-const authRouter = require('./routes/authRouter');
 
-// import tourRouter from './routes/tourRouter.js';
 const tourRouter = require('./routes/tourRouter');
 const userRouter = require('./routes/userRouter');
 const resRouter = require('./routes/resRouter');
@@ -84,7 +79,6 @@ app.get('/',(req, res) =>{
         user: 'Rakesh'
     })
 });
-// app.use('/auth', authRouter);
 app.use('/api/v1/tour', tourRouter);
 app.use('/api/v1/user', userRouter);
 app.use('/api/v1/restraunt', resRouter);
