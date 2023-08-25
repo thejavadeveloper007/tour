@@ -45,7 +45,7 @@ const restrictTo = (...roles) =>{
   }
 }
 
-const forgotPassword = catchAsync(async(req, res) =>{
+const forgotPassword = catchAsync(async(req, res, next) =>{
     const user = await User.findOne({email: req.body.email});
     //first check if user available
     if(!user){

@@ -6,8 +6,8 @@
 // passport.use(
 //     new GoogleStrategy(
 //         {
-//             clientID: "171096525288-235d1h8a0h9c5l2gpommaqvir8hr6l0i.apps.googleusercontent.com",
-//             clientSecret: "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",
+//             clientID: "",
+//             clientSecret: "",
 //             callbackURL: "http://localhost:7007/auth/google/callback",
 //             scope:['email','profile']
 //         },
