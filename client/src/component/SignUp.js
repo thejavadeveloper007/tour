@@ -26,8 +26,11 @@ const SignUp = () => {
         });
         // const json = await respone.json();
         console.log('27',respone);
+        if(respone){
+          window.location.href('/');
+        }
     } catch (error) {
-        
+        console.log(error);
     }
   };
 
@@ -78,7 +81,7 @@ const SignUp = () => {
         </label>
         <input
           className="border border-gray-500 rounded-full w-full p-1 px-4"
-          type="password"
+          type="new-password"
           name="password"
           value={formData.password}
           onChange={ handleInputChange}
@@ -91,7 +94,7 @@ const SignUp = () => {
         </label>
         <input
           className="border border-gray-500 rounded-full w-full p-1 px-4"
-          type="password"
+          type="new-password"
           name="confirmPassword"
           value={formData.confirmPassword}
           onChange={ handleInputChange}

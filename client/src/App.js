@@ -13,6 +13,9 @@ import Services from "./component/Services";
 import Help from "./component/Help";
 import SignUp from "./component/SignUp";
 import { ToastContainer } from "react-toastify";
+import ForgotPassword from "./component/ForgotPassword";
+import UpdateUser from "./component/UpdateUser";
+import Blog from "./component/Blog";
 
 import UserContext from "./utils/useContext";
 import { Provider } from "react-redux";
@@ -67,6 +70,10 @@ const appRouter = createBrowserRouter([
         element: <Login />
       },
       {
+        path:"/forgot-password",
+        element: <ForgotPassword />
+      },
+      {
         path:"/logout",
         element: <Logout />
       },
@@ -75,13 +82,21 @@ const appRouter = createBrowserRouter([
         element: <About />
       },
       {
+        path: "/blog",
+        element: <Blog />
+      },
+      {
         path: "/services",
         element: <Services />
       },
       {
         path: "/help",
         element: <Help />
-      }
+      },
+      {
+        path: "/update-user",
+        element: <UpdateUser />
+      },
     ]
   }
 ]);

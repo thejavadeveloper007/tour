@@ -6,7 +6,7 @@ import axios from 'axios';
 import { useEffect } from 'react';
 import { toast } from 'react-toastify';
 import { useDispatch } from 'react-redux';
-import { addLoginStatus } from '../utils/tourSlice';
+import { addLoginStatus, addUserId } from '../utils/tourSlice';
 // import { addToken } from '../utils/tourSlice';
 
 const baseURL = process.env.REACT_APP_SERVER_URL;
@@ -28,12 +28,14 @@ const GoogleOauth = () => {
         
         axios.post(`${baseURL}/api/v1/user/google-login`, { data: data }).then(async(response) => {
           dispatch(addLoginStatus(true));
+          dispatch(addUserId('23'));
+          console.log('user id',response);
                 localStorage.setItem('id', response.data.id);
                 const d = new Date();
                 d.setTime(d.getTime() + (30*24*60*60*1000));
                 let expires = "expires="+ d.toUTCString();
                 document.cookie = `_secure_RK=${response.data.token};expires=${expires};path=/`;
-  
+          console.log('cookie',response.data);
                 ReactGA.event({
                   category: "/google-login",
                   action: "Google login",

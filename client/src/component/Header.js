@@ -1,13 +1,15 @@
 import { Link } from "react-router-dom";
 import { LOGO_URL } from "../utils/constants"
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { addLoginStatus } from "../utils/tourSlice";
+import userImage from "../assets/images/user_profile_picture.png";
 
 const Header = () =>{
     const loginStatus = useSelector(store => store.tour.loginStatus);
     let dispatch = useDispatch();
-  
+    // const [isProfile, setIsProfile] = useState(false);
+
     useEffect(()=>{
       const token = getTokenFromCookie()  
         if(token){
@@ -33,9 +35,10 @@ const Header = () =>{
                 </div>
                 <div>
                     <ul className="list-none flex gap-3 pr-3">
-                        <li className="hover:text-red-200"><Link to="/">Home</Link></li>
+                        <li className="home hover:text-red-200"><Link to="/">Home</Link></li>
                         <li className="hover:text-red-200"><Link to="/about">About</Link></li>
                         <li className="hover:text-red-200"><Link to="/services">Services</Link></li>
+                        <li className="hover:text-red-200"><Link to="/blog">Blog</Link></li>
                         <li className="hover:text-red-200"><Link to="/help">Help</Link></li>
                         <li className="hover:text-red-200">
                             {
@@ -46,6 +49,7 @@ const Header = () =>{
                             }
                         </li>
                         <li className="hover:text-red-200"><Link to="/signUp">SignUp</Link></li>
+                        <li className="ml-5"><Link to='/update-user'><img className="w-8" src={userImage} alt="user-logo"/></Link></li>
                     </ul>
                 </div>
             </div>
