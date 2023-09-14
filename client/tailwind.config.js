@@ -5,6 +5,9 @@ module.exports = {
     extend: {
       height:{
         '81.6':'81.6vh'
+      },
+      backgroundImage:{
+        'hero-image': "url('./assets/images/pexels-jess-bailey-designs-965117.jpg')"
       }
     },
   },

@@ -25,17 +25,17 @@ mongoose.Query.prototype.exec = async function () {
   const key = JSON.stringify(Object.assign({}, this.getQuery(), {
     collection: this.mongooseCollection.name,
   }));
-  console.log("key", key);
+  // console.log("key", key);
   const cachedValue = await redis.hget(this.hashKey, key);
   if(cachedValue){
-    console.log('cached value',cachedValue);
+    // console.log('cached value',cachedValue);
     // return JSON.parse(cachedValue);
     const doc = JSON.parse(cachedValue); //we can send cached value directly but we need to send as a model format
     return Array.isArray(doc) ? doc.map(d => new this.model(d)) : new this.model(doc);
   }
-  console.log('arg',arguments);
+  // console.log('arg',arguments);
   const data = await exec.apply(this, arguments);
-  console.log('data 24',data);
+  // console.log('data 24',data);
   redis.hmset(this.hashKey, key, JSON.stringify(data), 'EX', 10); //hmset for multiple args we are using over here
   return data;
 };

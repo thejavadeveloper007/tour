@@ -1,6 +1,10 @@
 const express = require('express');
+// const multer = require('multer');
 const { signUp, loginUser, protect, forgotPassword, resetPassword, updatePassword, restrictTo, googleLogin } = require('../controller/authController');
-const { updateMe, deleteMe, deleteUser, updateById, uploadUserPhoto, getUserById } = require('../controller/userController');
+const { updateMe, deleteMe, deleteUser, updateById, uploadUserPhoto, getUserById, resizeImage } = require('../controller/userController');
+const { getAWSSignedUrl } = require('../controller/awsController');
+
+// const upload = multer({ dest: 'public/img/user'});
 
 userRouter = express.Router();
 
@@ -9,7 +13,7 @@ userRouter
 .post('/signup', signUp)
 .post('/login', loginUser)
 .post('/google-login', googleLogin)
-.patch('/updateMe', protect, uploadUserPhoto, updateMe)
+.patch('/updateMe', protect, updateMe)
 .patch('/deleteMe', protect, deleteMe)
 
 userRouter.post('/forgotPassword', forgotPassword);

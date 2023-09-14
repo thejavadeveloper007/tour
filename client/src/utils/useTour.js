@@ -1,10 +1,11 @@
 import { useState, useEffect } from "react";
 import { GET_TOURS } from "./constants";
 import axios from "axios";
+import { useSelector } from "react-redux";
 
 const useTours = () =>{
     const [tours, setTours] = useState([]);
-
+  const loginStatus = useSelector(store => store.tour.loginStatus);
     useEffect(() =>{
         getTours();
     },[]);
@@ -24,7 +25,8 @@ const useTours = () =>{
         const cookies = document.cookie.split('; ');
         for (const cookie of cookies) {
           const [name, value] = cookie.trim().split('=');
-          if (name === '_secure_RK') {
+          console.log('loginstatus', loginStatus);
+          if (name === '_secure_RK' && loginStatus) {
             return value;
           }
         }

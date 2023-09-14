@@ -7,7 +7,8 @@ const Body = () =>{
 
     return tours?.length === 0 ? <Simmer /> : (
        <>
-      <div className="grid grid-cols-5 gap-2 m-2 items-stretch">
+      <div className="h-81.6">
+      <div className="grid grid-cols-5 gap-2 m-2 items-stretch overflow-auto">
          {
             tours?.map( ele => 
                <div key={ele.id}>
@@ -16,6 +17,7 @@ const Body = () =>{
                 )
            }
          </div>
+      </div>
        </>
     )
 }

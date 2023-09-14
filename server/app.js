@@ -38,7 +38,7 @@ app.use(passport.session());
 // Define CORS options
 const corsOptions = {
     origin: 'http://localhost:3000', // specify your allowed origin(s)
-    methods: 'GET,POST',           // specify allowed HTTP methods
+    methods: 'GET,POST,PATCH',           // specify allowed HTTP methods
     allowedHeaders: 'Content-Type,Authorization', // specify allowed headers
     credentials: true
   };

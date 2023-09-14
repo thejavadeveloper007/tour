@@ -4,10 +4,10 @@ const Blog = require("../model/blog");
 // const { clearCache } = require('../utils/cache');
 
 const blogPost = catchAync(async (req, res, next) => {
-  const { blogContent } = req.body;
-   console.log('blog post..........');
+  const { title, content, imageUrl } = req.body;
+   console.log('blog post..........file',req.body);
   const _id = req?.user?._id;
-  const blog = await Blog.create({ userId: _id, blogContent: blogContent });
+  const blog = await Blog.create({ userId: _id, title: title, blogContent: content, imageUrl: imageUrl });
   if (!blog) {
     return next(new AppError("there is an error while creating blog!", 400));
   }
@@ -31,6 +31,5 @@ const getBlogs = catchAync(async (req, res, next) => {
     data: blog,
   });
 });
-
 
 module.exports = { blogPost, getBlogs };

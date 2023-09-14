@@ -8,13 +8,13 @@ const crypto = require('crypto');
 
 
 const protect = catchAsync(async(req, res, next) =>{
-    console.log('enterrrrrrrrrr protect',req.headers);
+    // console.log('enterrrrrrrrrr protect',req.headers);
     let token
     //1. get the token from headers
     if(req.headers?.authorization && req.headers?.authorization.startsWith('Bearer')){
         token = req.headers.authorization.split(' ')[1];
     }
-    console.log('token',token);
+    // console.log('token',token);
     if(!token){
         return next(new AppError('You are not logged in! Please login again to get access'));
     }
