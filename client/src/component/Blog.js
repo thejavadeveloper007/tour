@@ -95,7 +95,6 @@ const Blog = () => {
     // formData.append('content', content);
     // formData.append('image', image);
     // console.log('formdata',title, formData);
-    const token = getTokenFromCookie();
     if (token) {
       console.log("formData", formData);
       await axios.post(GET_BLOGS, JSON.stringify(formData), {
@@ -112,17 +111,16 @@ const Blog = () => {
       setIsSaved(isSaved ? false : true);
     }
   };
-  function getTokenFromCookie() {
-    const cookies = document.cookie.split("; ");
-    for (const cookie of cookies) {
-      // console.log('cookie 53', cookie);
-      const [name, value] = cookie.trim().split("=");
-      if (name === "_secure_RK") {
-        // console.log('value',value);
-        return value;
-      }
-    }
-    return null; // Token not found
+
+  const handleDelete = async(id) =>{
+    console.log('id',id);
+      const deleteRes = await axios.delete(`${GET_BLOGS}/${id}`,{
+        headers:{
+          'Authorization': `Bearer ${token}`
+        }
+      });
+      console.log('delete res', deleteRes);
+      setIsSaved(isSaved ? false : true);
   }
 
   return !loginStatus ? (
@@ -132,14 +130,18 @@ const Blog = () => {
       <div className="flex flex-row gap-4 items-start justify-center bg-opacity-40 rounded-lg shadow-lg p-4 w-3/4 h-3/4 mx-auto my-auto">
         <div className="mx-2 p-2 h-96">
           <div className="text-3xl my-2 font-bold mx-2">My blogs</div>
-          <div className="h-80 overflow-auto">
+          {
+            blogs.length > 0 ? (<div className="h-80 overflow-auto">
             {blogs?.map((e, index) => (
               <div
                 className="border-black border-b-2 border-dashed m-2 p-2"
                 key={e._id}
               >
-                <div className="font-bold text-xl">
-                  {index + 1}. {e?.title}
+                <div className="flex flex-row justify-between">
+                    <h1>
+                      {index + 1}. {e?.title}
+                    </h1>
+                    <button className="bg-teal-500 px-2 text-white rounded-md" onClick={() => handleDelete(e._id)}>delete</button>
                 </div>
                 <div className="flex justify-center">
                   <img className="h-80 my-2" src={e?.imageUrl} alt="blog-pic" />
@@ -147,7 +149,10 @@ const Blog = () => {
                 <div>{e?.blogContent}</div>
               </div>
             ))}
-          </div>
+          </div>) : (<div className="py-10">
+            No Blog is there ! Please write one...
+          </div>)
+          }
         </div>
         <div className="flex flex-col m-2 align-middle content-center items-center">
           <div className="text-3xl my-2 font-bold mx-2">Publish a new blog</div>

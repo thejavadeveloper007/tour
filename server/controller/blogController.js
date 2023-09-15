@@ -1,7 +1,9 @@
 const catchAync = require("../utils/catchAsync");
 const AppError = require("../utils/appError");
 const Blog = require("../model/blog");
+const { default: mongoose } = require("mongoose");
 // const { clearCache } = require('../utils/cache');
+const { deleteOne } = require('./handlerFactory');
 
 const blogPost = catchAync(async (req, res, next) => {
   const { title, content, imageUrl } = req.body;
@@ -32,4 +34,21 @@ const getBlogs = catchAync(async (req, res, next) => {
   });
 });
 
-module.exports = { blogPost, getBlogs };
+// const deleteBlogById = catchAync(async(req, res, next)=>{
+//     const { id } = req.params;
+//     console.log('id',id);
+//     const deleteBolg = await Blog.findByIdAndDelete(new mongoose.Types.ObjectId(id));
+//     console.log('delete res',deleteBolg);
+//     if(deleteBolg){
+//       res.status(200).json({
+//         status: "success",
+//         message: "Blog deleted successfully."
+//       });
+//     }else{
+//       return next(new AppError('Issue with blog deletion!', 400));
+//     }
+// })
+
+const deleteBlogById = deleteOne(Blog);
+
+module.exports = { blogPost, getBlogs, deleteBlogById };

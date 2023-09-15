@@ -28,7 +28,7 @@ mongoose.Query.prototype.exec = async function () {
   // console.log("key", key);
   const cachedValue = await redis.hget(this.hashKey, key);
   if(cachedValue){
-    // console.log('cached value',cachedValue);
+    console.log('cached value',cachedValue);
     // return JSON.parse(cachedValue);
     const doc = JSON.parse(cachedValue); //we can send cached value directly but we need to send as a model format
     return Array.isArray(doc) ? doc.map(d => new this.model(d)) : new this.model(doc);

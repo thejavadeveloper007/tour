@@ -3,22 +3,26 @@ import React, { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import { GET_USER, GET_BLOGS } from "../utils/constants";
 import Simmer from "./Simmer";
+import { useDispatch } from "react-redux";
+import { addUser } from "../utils/tourSlice";
 
 const UpdateUser = () => {
   // const userId = useSelector(store => store.tour?.userId);
   // console.log(localStorage.getItem('id'));
   // console.log('user',userId);
+  let dispatch = useDispatch();
   const token = useSelector((store) => store.tour.token);
   const [userFormData, setUserFormData] = useState({
     name: "",
     email: "",
     photo: "",
   });
+  const [isSaved, setIsSaved] = useState(false);
   const [imageUploading, setImageUploading] = useState(false);
   useEffect(() => {
     console.log("enter-----------");
     getMe();
-  }, []);
+  }, [isSaved]);
   async function getMe() {
     const response = await axios.get(`${GET_USER}/getUserById`, {
       headers: {
@@ -27,6 +31,7 @@ const UpdateUser = () => {
     });
     if (response) {
       console.log("res 28", response);
+      dispatch(addUser(response?.data?.data));
       setUserFormData({
         ...userFormData,
         name: response?.data?.data?.name,
@@ -96,6 +101,7 @@ const UpdateUser = () => {
       }
     });
     console.log('updated user',updateMe);
+    setIsSaved(isSaved ? false : true);
   };
 
   return userFormData.length === 0 ? (
