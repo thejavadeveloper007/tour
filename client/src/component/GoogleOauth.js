@@ -6,7 +6,8 @@ import axios from 'axios';
 import { useEffect } from 'react';
 import { toast } from 'react-toastify';
 import { useDispatch } from 'react-redux';
-import { addLoginStatus } from '../utils/tourSlice';
+import { GET_USER } from '../utils/constants';
+import { addLoginStatus, addUserId, addToken, addUser } from '../utils/tourSlice';
 // import { addToken } from '../utils/tourSlice';
 
 const baseURL = process.env.REACT_APP_SERVER_URL;
@@ -27,32 +28,44 @@ const GoogleOauth = () => {
         localStorage.setItem('email', data.email);
         
         axios.post(`${baseURL}/api/v1/user/google-login`, { data: data }).then(async(response) => {
+          const { id, token } = response?.data;
+
+          const userData = await axios.get(`${GET_USER}/getUserById`,{
+            headers:{
+              'Authorization': `Bearer ${token}`
+            }
+          });
+          console.log('user data',userData); 
+          dispatch(addUser(userData?.data?.data));
           dispatch(addLoginStatus(true));
-                localStorage.setItem('id', response.data.id);
-                const d = new Date();
-                d.setTime(d.getTime() + (30*24*60*60*1000));
-                let expires = "expires="+ d.toUTCString();
-                document.cookie = `_secure_RK=${response.data.token};expires=${expires};path=/`;
-  
-                ReactGA.event({
+          // dispatch(addUserId('23'));
+          dispatch(addToken(token));
+          console.log('user id',response);
+          localStorage.setItem('id', id);
+          const d = new Date();
+          d.setTime(d.getTime() + (5*60*1000));
+          let expires = "expires="+ d.toUTCString();
+          document.cookie = `_secure_RK=${token};expires=${expires};path=/`;
+          console.log('cookie',response.data);
+          ReactGA.event({
                   category: "/google-login",
                   action: "Google login",
                   label: "Google",
                   value: 'data'
                 })
-            //    await dispatch(addToken(response.data.token)); //temporary adding token to redux store
-            setTimeout(()=>{
-              window.location.href = ('/');
-            },1500)
-            toast.success('Login successful!', {
-              position: 'top-center',
-              autoClose: 1500,
-              hideProgressBar: true,
-              closeOnClick: true,
-              pauseOnHover: false,
-              draggable: true,
-              progress: undefined,
-            });
+                //    await dispatch(addToken(response.data.token)); //temporary adding token to redux store
+                setTimeout(()=>{
+                  window.location.href = ('/');
+                },1500)
+                toast.success('Login successful!', {
+                  position: 'top-center',
+                  autoClose: 1500,
+                  hideProgressBar: true,
+                  closeOnClick: true,
+                  pauseOnHover: false,
+                  draggable: true,
+                  progress: undefined,
+                });
               }).catch((err) =>{
                 toast.error('Login failed. Please try again.', {
                   position: 'top-center',

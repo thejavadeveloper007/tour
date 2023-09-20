@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import ReactDOM from "react-dom/client";
-import { createBrowserRouter, RouterProvider, Outlet} from "react-router-dom"
+import { createBrowserRouter, RouterProvider, Outlet } from "react-router-dom";
 
 import Header from "./component/Header";
 import Body from "./component/Body";
@@ -13,78 +13,97 @@ import Services from "./component/Services";
 import Help from "./component/Help";
 import SignUp from "./component/SignUp";
 import { ToastContainer } from "react-toastify";
+import ForgotPassword from "./component/ForgotPassword";
+import UpdateUser from "./component/UpdateUser";
+import Blog from "./component/Blog";
 
 import UserContext from "./utils/useContext";
 import { Provider } from "react-redux";
-import store from "./utils/store";
-import 'react-toastify/dist/ReactToastify.css';
+// import store from "./utils/store";
+import store, { persistor } from "./utils/store";
+import { PersistGate } from "redux-persist/integration/react";
+import "react-toastify/dist/ReactToastify.css";
 
-const AppLayout = () =>{
+const AppLayout = () => {
   const [user, setUser] = useState({
     name: "Ramesh",
-    email: "ramesh@gmail.com"
+    email: "ramesh@gmail.com",
   });
-  
-  const getUser = async () =>{
+
+  const getUser = async () => {
     try {
-      const url = `${process.env.SERVER_URL}/auth/login/success`
-    } catch (error) {
-      
-    }
-  }
-  return(
+      const url = `${process.env.SERVER_URL}/auth/login/success`;
+    } catch (error) {}
+  };
+  return (
     <>
-    <Provider store={store}>
-    <UserContext.Provider value={{
-        user: user
-      }}>
-     <Header />
-      <Outlet />
-     <ToastContainer />
-      <Footer />
-    </UserContext.Provider>
-    </Provider>
+      <Provider store={store}>
+        <UserContext.Provider
+          value={{
+            user: user,
+          }}
+        >
+          <PersistGate persistor={persistor}>
+            <Header />
+            <Outlet />
+            <ToastContainer />
+            <Footer />
+          </PersistGate>
+        </UserContext.Provider>
+      </Provider>
     </>
-  )
-}
+  );
+};
 
 const appRouter = createBrowserRouter([
   {
-    path:"/",
+    path: "/",
     element: <AppLayout />,
     errorElement: <Error />,
-    children:[
+    children: [
       {
         path: "/",
-        element: <Body />
+        element: <Body />,
       },
       {
         path: "/signUp",
-        element: <SignUp />
+        element: <SignUp />,
       },
       {
-        path:"/login",
-        element: <Login />
+        path: "/login",
+        element: <Login />,
       },
       {
-        path:"/logout",
-        element: <Logout />
+        path: "/forgot-password",
+        element: <ForgotPassword />,
       },
       {
-        path:"/about",
-        element: <About />
+        path: "/logout",
+        element: <Logout />,
+      },
+      {
+        path: "/about",
+        element: <About />,
+      },
+      {
+        path: "/blog",
+        element: <Blog />,
       },
       {
         path: "/services",
-        element: <Services />
+        element: <Services />,
       },
       {
         path: "/help",
-        element: <Help />
-      }
-    ]
-  }
+        element: <Help />,
+      },
+      {
+        path: "/update-user",
+        element: <UpdateUser />,
+      },
+    ],
+  },
 ]);
 
-const root = ReactDOM.createRoot(document.getElementById('root'));
+const root = ReactDOM.createRoot(document.getElementById("root"));
 root.render(<RouterProvider router={appRouter} />);

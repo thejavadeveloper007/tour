@@ -17,6 +17,8 @@ const tourRouter = require('./routes/tourRouter');
 const userRouter = require('./routes/userRouter');
 const resRouter = require('./routes/resRouter');
 const reviewRouter = require('./routes/reviewRouter');
+const blogRouter = require('./routes/blogRouter');
+require('./utils/cache');
 
 const app = express();
 app.set('view engine', 'pug');
@@ -36,7 +38,7 @@ app.use(passport.session());
 // Define CORS options
 const corsOptions = {
     origin: 'http://localhost:3000', // specify your allowed origin(s)
-    methods: 'GET,POST',           // specify allowed HTTP methods
+    methods: 'GET,POST,PATCH,DELETE',           // specify allowed HTTP methods
     allowedHeaders: 'Content-Type,Authorization', // specify allowed headers
     credentials: true
   };
@@ -83,6 +85,7 @@ app.use('/api/v1/tour', tourRouter);
 app.use('/api/v1/user', userRouter);
 app.use('/api/v1/restraunt', resRouter);
 app.use('/api/v1/review', reviewRouter);
+app.use('/api/v1/blog', blogRouter);
 
 app.all('*',(req,res,next) =>{
     next( new AppError(`Path url ${req.originalUrl} is incorrect!`, 404));

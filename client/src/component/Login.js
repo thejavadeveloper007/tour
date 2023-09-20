@@ -1,9 +1,10 @@
 import React, { useState } from 'react'
 import axios from 'axios';
-import { addLoginStatus } from '../utils/tourSlice';
+import { addLoginStatus, addUserId } from '../utils/tourSlice';
 import { useDispatch } from 'react-redux';
 import GoogleOauth from './GoogleOauth';
 import { toast } from 'react-toastify';
+import { Link } from 'react-router-dom';
 
 const Login = () => {
   let dispatch = useDispatch();
@@ -15,11 +16,13 @@ const Login = () => {
   const handleLogin = async(event) => {
     event.preventDefault();
    
-    axios.post(`${process.env.REACT_APP_SERVER_URL}/api/v1/user/login`,JSON.stringify(formData),{  headers:{
+    axios.post(`${process.env.REACT_APP_SERVER_URL}/api/v1/user/login`,JSON.stringify(formData),{ headers:{
       'Content-Type': 'application/json'
     }}
     ).then((response) =>{
       dispatch(addLoginStatus(true));
+      dispatch(addUserId(response.data.id));
+      console.log('user id',response.data);
       localStorage.setItem('id', response.data.id);
                   const d = new Date();
                   d.setTime(d.getTime() + (30*24*60*60*1000));
@@ -32,7 +35,7 @@ const Login = () => {
                     position: 'top-center',
                     autoClose: 3000,
                     hideProgressBar: true,
-                    closeOnClick: true,
+                    closeOnClick: true, 
                     pauseOnHover: false,
                     draggable: true,
                     progress: undefined,
@@ -71,12 +74,15 @@ const Login = () => {
           </div>
           <div className='my-1'>
             <label className='mr-3' htmlFor="password">Password:</label>
-            <input className='w-full form-input rounded-full h-8  ' type="password" name="password" value={formData.password} onChange={handleInputChange} placeholder='Enter password here...'/>
+            <input className='w-full form-input rounded-full h-8  ' type="current-password" name="password" value={formData.password} onChange={handleInputChange} placeholder='Enter password here...'/>
           </div>
           <div className='flex content-center mx-auto'>
           <button className='bg-teal-600 hover:bg-teal-700 rounded-md px-5 py-1 text-white' type='submit'>Login</button>
           </div>
         </form>
+      </div>
+      <div>
+        <Link to='/forgot-password'><button>Forgot Password</button></Link>
       </div>
       <div className='flex flex-col items-center gap-3'>
         <p className='font-bold'>or</p>

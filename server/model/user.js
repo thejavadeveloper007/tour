@@ -16,7 +16,8 @@ lowercase: true,
 validate: [validator.isEmail, 'Please provide a valid email!']
 },
 photo:{
-    type: String
+    type: String,
+    default: 'default-user-profile-picture.png'
 },
 role:{
     type: String,

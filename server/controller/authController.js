@@ -5,14 +5,17 @@ const catchAsync = require('../utils/catchAsync');
 const AppError = require('../utils/appError');
 const sendEmail = require('../utils/email');
 const crypto = require('crypto');
+const Email = require('../utils/email');
 
 
-const protect = async(req, res, next) =>{
+const protect = catchAsync(async(req, res, next) =>{
+    // console.log('enterrrrrrrrrr protect',req.headers);
     let token
     //1. get the token from headers
     if(req.headers?.authorization && req.headers?.authorization.startsWith('Bearer')){
         token = req.headers.authorization.split(' ')[1];
     }
+    // console.log('token',token);
     if(!token){
         return next(new AppError('You are not logged in! Please login again to get access'));
     }
@@ -33,8 +36,8 @@ const protect = async(req, res, next) =>{
     }
     //grant access to protected route
     req.user = currentUser;
-    next(); 
-}
+    next();
+})
 
 const restrictTo = (...roles) =>{
   return (req, res, next) =>{
@@ -46,6 +49,8 @@ const restrictTo = (...roles) =>{
 }
 
 const forgotPassword = catchAsync(async(req, res, next) =>{
+    const {email} = req.body;
+    console.log('email 50',email);
     const user = await User.findOne({email: req.body.email});
     //first check if user available
     if(!user){
@@ -58,22 +63,19 @@ const forgotPassword = catchAsync(async(req, res, next) =>{
 
     const resetUrl = `${req.protocol}://${req.get('host')}/api/v1/user/resetPassword/${resetToken}`;
     const message = `To reset your password plaese click the link ${resetUrl} and if not required, plaese ignore this.`
-   try {
-    await sendEmail({
-        email: user.email,
-        subject: 'This reset link is active for 10min only.',
-        message
+
+    await new Email(user, resetUrl).sendPasswordReset().then((response)=>{
+        res.status(200).json({
+            status: "success",
+            message: "Reset link sent successfully to your email."
+        });
+    }).catch((err) =>{
+        console.log('err 73',err);
+        user.passwordResetToken = undefined;
+        user.resetTokenExpitesIn = undefined;
+        user.save({validateBeforeSave: false});
+        return next(new AppError('There was an error sending email, please try again!', 500));
     });
-    res.status(200).json({
-        status: "success",
-        message: "Reset link sent successfully to your email."
-    });
-   } catch (error) {
-    user.passwordResetToken = undefined;
-    user.resetTokenExpitesIn = undefined;
-    user.save({validateBeforeSave: false});
-    return next(new AppError('There was an error sending email, please try again!', 500));
-   }
 });
 
 const resetPassword = catchAsync(async(req, res, next) =>{
@@ -153,7 +155,11 @@ const signUp = catchAsync(async(req,res) => {
     const { name, email, password, confirmPassword, passwordChangedAt, role } = req.body;
 
     const newUser = await User.create({name: name, email: email, password: password, confirmPassword: confirmPassword, passwordChangedAt: passwordChangedAt, role: role});
-
+   
+    const url = `${req.protocol}://${req.get('host')}/me`;
+    console.log(url);
+    await new Email(newUser, url).sendWelcome();
+    
     const token = await getToken(newUser._id);
 
     res.status(200).json({
@@ -165,6 +171,7 @@ const signUp = catchAsync(async(req,res) => {
 });
 
 const loginUser = catchAsync(async(req, res, next) =>{
+    console.log('enterrrrrrrrrrrrrrr');
     const { email, password } = req.body;
     //check fields are not empty
     if(!email || !password){
@@ -185,17 +192,23 @@ const loginUser = catchAsync(async(req, res, next) =>{
 });
 
 const googleLogin = catchAsync(async(req, res) =>{
+    console.log('hiii i m in google auth API');
     const { email } = req.body.data;
     const user = await User.findOne({email: email});
+    console.log('my userrrrrrrrrrrrrrrrrrrrrrrrrrrr',user);
     let token
     if(user){
      token = await getToken(user?._id);
+     res.status(200).json({
+         status: "success",
+         token: token,
+         id: user?._id
+     });
     }
-    res.status(200).json({
-        status: "success",
-        token: token,
-        id: user?._id
-    });
+    res.status(400).json({
+        status: 'failure',
+        message: 'No user found! please register first.'
+    })
 })
 
 module.exports = { signUp, loginUser, protect, restrictTo, forgotPassword, resetPassword, updatePassword, googleLogin }

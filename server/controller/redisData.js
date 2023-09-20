@@ -13,7 +13,7 @@ const getDataFromRedis = (key) =>{
         // await redisClient.disconnect();
         return res.status(200).json({
             status: 'success',
-            message: 'Tours data fetched successfully',
+            message: 'Tours data fetched successfully with redis',
             data: tours
         })
        }

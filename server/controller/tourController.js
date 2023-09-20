@@ -85,9 +85,7 @@ const getTourStats = catchAsync(async (req, res, next) => {
 });
 
 const createTour = catchAsync(async (req, res, next) => {
-  // console.log('req',req);
   const reqBody = req.body;
-  console.log("reqBody", reqBody);
   const tourData = await Tour.create(reqBody);
 
   console.log("res", tourData);
@@ -146,8 +144,10 @@ const getAllTour = catchAsync(async (req, res, next) => {
   //execute query
   // const tours = await query;
   // const tours = await Tour.find();
-  const cachedData = await redis.get('tour-data');
-  const toursfromRedis = JSON.parse(cachedData);
+
+  // const cachedData = await redis.get('tour-data');
+  // const toursfromRedis = JSON.parse(cachedData);
+  
     const features = new APIFeature(
       Tour.find().populate({
         path: "guide",

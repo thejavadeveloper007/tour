@@ -12,6 +12,7 @@ const deleteOne = Model =>catchAsync(async(req, res, next)=>{
 });
 
 const updateOne = Model => catchAsync(async(req, res, next) =>{
+    console.log('file',req.file);
     const id = req.params.id;
     const reqBody = req.body;
     const doc = await Model.findByIdAndUpdate(id,{$set:reqBody},{new:true});
