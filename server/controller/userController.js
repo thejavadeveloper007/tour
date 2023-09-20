@@ -6,6 +6,7 @@ const { default: mongoose } = require("mongoose");
 const path = require("path");
 const multer = require("multer");
 const sharp = require("sharp");
+const Email = require("../utils/email");
 
 // const multerStorage = multer.diskStorage({
 //     destination: (req, file, cb) =>{
@@ -117,5 +118,5 @@ module.exports = {
   updateById,
   uploadUserPhoto,
   getUserById,
-  resizeImage,
+  resizeImage
 };

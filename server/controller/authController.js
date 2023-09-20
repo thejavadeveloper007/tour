@@ -5,6 +5,7 @@ const catchAsync = require('../utils/catchAsync');
 const AppError = require('../utils/appError');
 const sendEmail = require('../utils/email');
 const crypto = require('crypto');
+const Email = require('../utils/email');
 
 
 const protect = catchAsync(async(req, res, next) =>{
@@ -63,11 +64,7 @@ const forgotPassword = catchAsync(async(req, res, next) =>{
     const resetUrl = `${req.protocol}://${req.get('host')}/api/v1/user/resetPassword/${resetToken}`;
     const message = `To reset your password plaese click the link ${resetUrl} and if not required, plaese ignore this.`
 
-    await sendEmail({
-        email: user.email,
-        subject: 'This reset link is active for 10min only.',
-        message
-    }).then((res)=>{
+    await new Email(user, resetUrl).sendPasswordReset().then((response)=>{
         res.status(200).json({
             status: "success",
             message: "Reset link sent successfully to your email."
@@ -158,7 +155,11 @@ const signUp = catchAsync(async(req,res) => {
     const { name, email, password, confirmPassword, passwordChangedAt, role } = req.body;
 
     const newUser = await User.create({name: name, email: email, password: password, confirmPassword: confirmPassword, passwordChangedAt: passwordChangedAt, role: role});
-
+   
+    const url = `${req.protocol}://${req.get('host')}/me`;
+    console.log(url);
+    await new Email(newUser, url).sendWelcome();
+    
     const token = await getToken(newUser._id);
 
     res.status(200).json({
